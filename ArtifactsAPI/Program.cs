@@ -10,7 +10,6 @@ namespace ArtifactsAPI
 
             builder.Services.AddControllers();
 
-            // 1. رجعنا ربط الداتا بيز عشان الـ Controllers تشتغل
             builder.Services.AddDbContext<ArtifactsAPI.Data.ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
