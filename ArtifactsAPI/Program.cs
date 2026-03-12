@@ -27,8 +27,7 @@ namespace ArtifactsAPI
             app.UseAuthorization();
             app.MapControllers();
 
-            // 2. سطر اختبار النبض (Ping Test) - ده اللي هيقولك إنه شغال
-            app.MapGet("/", () => "Hello Hossam! The API is running perfectly! 🚀");
+       
 
             app.Run();
         }
