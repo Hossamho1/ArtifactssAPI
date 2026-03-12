@@ -1,0 +1,15 @@
+@ArtifactsAPI_HostAddress = http://localhost:5070
+
+POST {{ArtifactsAPI_HostAddress}}/api/Artifacts
+Content-Type: application/json
+
+{
+  "name": "King Tut Mask",
+  "history": "Found in Valley of the Kings by Howard Carter in 1922.",
+  "location": "Grand Egyptian Museum"
+}
+
+###
+
+GET {{ArtifactsAPI_HostAddress}}/api/Artifacts
+Accept: application/json

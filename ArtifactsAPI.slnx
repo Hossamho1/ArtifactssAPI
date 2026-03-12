@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Data/">
+    <File Path="ApplicationDbContext.cs" />
+  </Folder>
+  <Folder Name="/Models/">
+    <File Path="AIReport.cs" />
+    <File Path="Artifact.cs" />
+    <File Path="ScanRecord.cs" />
+    <File Path="User.cs" />
+  </Folder>
+  <Project Path="ArtifactsAPI/ArtifactsAPI.csproj" />
+</Solution>
