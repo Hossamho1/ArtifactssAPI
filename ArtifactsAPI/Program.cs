@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace ArtifactsAPI
 {
@@ -10,8 +11,17 @@ namespace ArtifactsAPI
 
             builder.Services.AddControllers();
 
+            // Supabase Transaction pooler (Port 6543) with internal pooling disabled.
+            // PgBouncer drops connections between transactions, so Npgsql prepared 
+            // statements MUST be disabled (MaxAutoPrepare = 0) to avoid fatal hanging 
+            // on UPDATE/DELETE ops when the backend connection changes.
+            var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connStr);
+            dataSourceBuilder.ConnectionStringBuilder.MaxAutoPrepare = 0;
+            var dataSource = dataSourceBuilder.Build();
+
             builder.Services.AddDbContext<ArtifactsAPI.Data.ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(dataSource));
 
             builder.Services.AddOpenApi();
 
@@ -25,8 +35,6 @@ namespace ArtifactsAPI
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
-
-       
 
             app.Run();
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,7 +43,6 @@ public class ArtifactsController : ControllerBase
     }
 
     // PUT: api/Artifacts/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
     public async Task<IActionResult> PutArtifact(int id, Artifact artifact)
     {
@@ -74,7 +73,6 @@ public class ArtifactsController : ControllerBase
     }
 
     // POST: api/Artifacts
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<Artifact>> PostArtifact(Artifact artifact)
     {
