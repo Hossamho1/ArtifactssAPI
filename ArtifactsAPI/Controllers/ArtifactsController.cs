@@ -13,7 +13,7 @@ namespace ArtifactsAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize] // 👈 السطر ده هو اللي بيخلي تيم الفلاتر لازم يبعت الـ Token في الـ Header
+[Authorize] 
 public class ArtifactsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
