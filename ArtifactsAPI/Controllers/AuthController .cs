@@ -1,4 +1,4 @@
-﻿using ArtifactsAPI.Data;
+using ArtifactsAPI.Data;
 using ArtifactsAPI.DTOs;
 using ArtifactsAPI.Models;
 using BCrypt.Net;
@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ArtifactsAPI.DTOs;
+
 namespace ArtifactsAPI.Controllers;
 
 [Route("api/[controller]")]
