@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+// 👇 1. New libraries for JWT
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ArtifactsAPI
 {
@@ -23,7 +27,31 @@ namespace ArtifactsAPI
             builder.Services.AddDbContext<ArtifactsAPI.Data.ApplicationDbContext>(options =>
                 options.UseNpgsql(dataSource));
 
+            // JWT Authentication Configuration
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+                    };
+                });
+            // End of JWT Configuration
+
             builder.Services.AddOpenApi();
+
+            builder.Services.AddCors(options => {
+                options.AddPolicy("AllowAll", b => b.AllowAnyMethod()
+                                                   .AllowAnyHeader()
+                                                   .AllowAnyOrigin());
+            });
+
 
             var app = builder.Build();
 
@@ -33,8 +61,17 @@ namespace ArtifactsAPI
             }
 
             app.UseHttpsRedirection();
-            app.UseAuthorization();
+
+            app.UseCors("AllowAll");
+
+            // . Middleware Order is VERY important!
+            app.UseAuthentication(); // First check WHO the user is (Token check)
+            app.UseAuthorization();  // Then check WHAT they can do (Role check)
+
             app.MapControllers();
+
+            // MapGet must be before app.Run()
+            app.MapGet("/", () => "The API is running! Go to /swagger to test it.");
 
             app.Run();
         }
