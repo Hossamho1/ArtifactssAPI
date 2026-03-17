@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-// 👇 1. New libraries for JWT
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Scalar.AspNetCore; // Ensure this package is installed via NuGet
 
 namespace ArtifactsAPI
 {
@@ -13,12 +13,12 @@ namespace ArtifactsAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container
             builder.Services.AddControllers();
 
-            // Supabase Transaction pooler (Port 6543) with internal pooling disabled.
-            // PgBouncer drops connections between transactions, so Npgsql prepared 
-            // statements MUST be disabled (MaxAutoPrepare = 0) to avoid fatal hanging 
-            // on UPDATE/DELETE ops when the backend connection changes.
+            // --- Database Configuration (Supabase/PostgreSQL) ---
+            // Using NpgsqlDataSource to handle transaction pooling (Port 6543)
+            // MaxAutoPrepare is set to 0 to prevent issues with PgBouncer
             var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connStr);
             dataSourceBuilder.ConnectionStringBuilder.MaxAutoPrepare = 0;
@@ -27,7 +27,7 @@ namespace ArtifactsAPI
             builder.Services.AddDbContext<ArtifactsAPI.Data.ApplicationDbContext>(options =>
                 options.UseNpgsql(dataSource));
 
-            // JWT Authentication Configuration
+            // --- JWT Authentication Setup ---
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -42,36 +42,36 @@ namespace ArtifactsAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
                     };
                 });
-            // End of JWT Configuration
 
+            // Add OpenAPI/Scalar support
             builder.Services.AddOpenApi();
 
+            // Configure CORS to allow Flutter & AI team connections
             builder.Services.AddCors(options => {
                 options.AddPolicy("AllowAll", b => b.AllowAnyMethod()
                                                    .AllowAnyHeader()
                                                    .AllowAnyOrigin());
             });
 
-
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
+            // --- API Documentation Setup ---
+            // Moving these outside 'IsDevelopment' so they work on Railway (Production)
+            app.MapOpenApi();
+            app.MapScalarApiReference();
 
+            // Middleware Pipeline
             app.UseHttpsRedirection();
-
             app.UseCors("AllowAll");
 
-            // . Middleware Order is VERY important!
-            app.UseAuthentication(); // First check WHO the user is (Token check)
-            app.UseAuthorization();  // Then check WHAT they can do (Role check)
+            // Authentication must come before Authorization
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
 
-            // MapGet must be before app.Run()
-            app.MapGet("/", () => "The API is running! Go to /swagger to test it.");
+            // Health Check / Welcome Route
+            app.MapGet("/", () => "The Artifacts API is LIVE! Access documentation at: /scalar/v1");
 
             app.Run();
         }
