@@ -1,5 +1,6 @@
-@ArtifactsAPI_HostAddress = http://localhost:5070
+@ArtifactsAPI_HostAddress = https://localhost:7066
 
+### 
 POST {{ArtifactsAPI_HostAddress}}/api/Artifacts
 Content-Type: application/json
 
@@ -9,7 +10,25 @@ Content-Type: application/json
   "location": "Grand Egyptian Museum"
 }
 
-###
+### (Register)
+POST {{ArtifactsAPI_HostAddress}}/api/Auth/register
+Content-Type: application/json
 
+{
+  "name": "Hossam",
+  "email": "hossam@engineer.com",
+  "role": "Engineer",
+  "passwordHash": "Password123" 
+}
+### 3.  (Login)
+POST {{ArtifactsAPI_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "hossam@engineer.com",
+  "passwordHash": "Password123" 
+}
+
+### 4. 
 GET {{ArtifactsAPI_HostAddress}}/api/Artifacts
 Accept: application/json
