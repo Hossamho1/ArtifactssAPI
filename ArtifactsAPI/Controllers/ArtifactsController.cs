@@ -1,17 +1,19 @@
+using ArtifactsAPI.Data;
+using ArtifactsAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ArtifactsAPI.Data;
-using ArtifactsAPI.Models;
 
 namespace ArtifactsAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize] 
 public class ArtifactsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -43,6 +45,7 @@ public class ArtifactsController : ControllerBase
     }
 
     // PUT: api/Artifacts/5
+    [Authorize(Roles = "Engineer")]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutArtifact(int id, Artifact artifact)
     {
@@ -73,6 +76,7 @@ public class ArtifactsController : ControllerBase
     }
 
     // POST: api/Artifacts
+    [Authorize(Roles = "Engineer")]
     [HttpPost]
     public async Task<ActionResult<Artifact>> PostArtifact(Artifact artifact)
     {
@@ -83,7 +87,9 @@ public class ArtifactsController : ControllerBase
     }
 
     // DELETE: api/Artifacts/5
+    
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Engineer")]
     public async Task<IActionResult> DeleteArtifact(int id)
     {
         var artifact = await _context.Artifacts.FindAsync(id);
