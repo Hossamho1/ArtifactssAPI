@@ -58,15 +58,15 @@ namespace ArtifactsAPI
             // --- API Documentation Setup ---
             // Moving these outside 'IsDevelopment' so they work on Railway (Production)
             app.MapOpenApi();
-            app.MapScalarApiReference(); 
+            app.MapScalarApiReference();
 
             // Middleware Pipeline
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
 
             // Authentication must come before Authorization
-            app.UseAuthentication(); 
-            app.UseAuthorization();  
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
 
