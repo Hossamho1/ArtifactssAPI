@@ -15,4 +15,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<ScanRecord> ScanRecords { get; set; }
     public DbSet<AIReport> AIReports { get; set; }
 
+    public DbSet<Post> Posts { get; set; }
+    public DbSet<Coordinate> Coordinates { get; set; }
+
+    
+
 }

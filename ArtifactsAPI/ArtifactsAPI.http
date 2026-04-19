@@ -1,16 +1,19 @@
+
 @ArtifactsAPI_HostAddress = https://localhost:7066
+@MyToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJIb3NzYW0iLCJlbWFpbCI6Imhvc3NhbUBlbmdpbmVlci5jb20iLCJyb2xlIjoiRW5naW5lZXIiLCJuYmYiOjE3NzM3ODUzOTUsImV4cCI6MTc3NDM5MDE5NSwiaWF0IjoxNzczNzg1Mzk1LCJpc3MiOiJBcnRpZmFjdHNBUEkiLCJhdWQiOiJGbHV0dGVyQXBwVXNlcnMifQ.9PeCPqaTxF1LeJccnp4QNUUtNucHzlQ1RclY5McipLo
 
 ### 
 POST {{ArtifactsAPI_HostAddress}}/api/Artifacts
 Content-Type: application/json
+Authorization: Bearer {{MyToken}}
 
 {
-  "name": "King Tut Mask",
+  "name": "King Hossam Mask",
   "history": "Found in Valley of the Kings by Howard Carter in 1922.",
   "location": "Grand Egyptian Museum"
 }
 
-### (Register)
+### 2.
 POST {{ArtifactsAPI_HostAddress}}/api/Auth/register
 Content-Type: application/json
 
@@ -20,7 +23,8 @@ Content-Type: application/json
   "role": "Engineer",
   "passwordHash": "Password123" 
 }
-### 3.  (Login)
+
+### 3. 
 POST {{ArtifactsAPI_HostAddress}}/api/Auth/login
 Content-Type: application/json
 
@@ -29,6 +33,43 @@ Content-Type: application/json
   "passwordHash": "Password123" 
 }
 
-### 4. 
+
+
+### 5. 
 GET {{ArtifactsAPI_HostAddress}}/api/Artifacts
+Authorization: Bearer {{MyToken}}
+Accept: application/json
+
+
+
+
+
+### Create a New Post (With Coordinates)
+POST {{ArtifactsAPI_HostAddress}}/api/Posts
+Content-Type: application/json
+Authorization: Bearer {{MyToken}}
+
+{
+  "title": "The Great Sphinx Scan",
+  "description": "A detailed 3D scan of the Sphinx",
+  "coverPhoto": "https://url.com/cover.jpg",
+  "model3D": "https://url.com/model.glb",
+  "coordinates": [
+    {
+      "title": "Head Position",
+      "description": "Right eye area",
+      "x": 29.9753,
+      "y": 31.1308
+    },
+    {
+      "title": "Base Position",
+      "description": "Left paw area",
+      "x": 29.9750,
+      "y": 31.1305
+    }
+  ]
+}
+
+### Get All Posts
+GET {{ArtifactsAPI_HostAddress}}/api/Posts
 Accept: application/json
