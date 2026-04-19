@@ -2,6 +2,7 @@ using ArtifactsAPI.Data;
 using ArtifactsAPI.DTOs;
 using ArtifactsAPI.Models;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -83,4 +84,19 @@ public class AuthController : ControllerBase
 
         return Ok("User registered successfully with hashed password!");
     }
+
+
+    [HttpGet("engineers")]
+[Authorize(Roles = "Engineer")] 
+    public async Task<ActionResult<IEnumerable<User>>> GetAllEngineers()
+    {
+       // Engineer
+        var engineers = await _context.Users
+            .Where(u => u.Role == "Engineer")
+            .ToListAsync();
+
+        return Ok(engineers);
+
+    }
+  
 }
