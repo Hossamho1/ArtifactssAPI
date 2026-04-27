@@ -1,4 +1,4 @@
-﻿using ArtifactsAPI.Data;
+using ArtifactsAPI.Data;
 using ArtifactsAPI.DTOs;
 using ArtifactsAPI.Models;
 using BCrypt.Net;
