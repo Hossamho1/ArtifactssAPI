@@ -1,8 +1,8 @@
-﻿using ArtifactsAPI.Models; 
+﻿using ArtifactsAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims; 
+using System.Security.Claims;
 using ArtifactsAPI.Data;
 using System;
 using System.Collections.Generic;

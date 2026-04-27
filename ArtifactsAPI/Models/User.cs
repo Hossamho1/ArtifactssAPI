@@ -20,7 +20,7 @@ namespace ArtifactsAPI.Models
         [Required]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
         [MaxLength(255, ErrorMessage = "Password is too long.")]
-        [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$", ErrorMessage = "Password must contain at least one letter and one number.")]
+        [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d_@#!.]{6,}$", ErrorMessage = "Password must contain at least one letter and one number.")]
         public string PasswordHash { get; set; } = string.Empty;
 
         [Required]
