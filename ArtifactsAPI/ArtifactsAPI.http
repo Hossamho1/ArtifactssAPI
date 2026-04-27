@@ -1,6 +1,7 @@
 
 @ArtifactsAPI_HostAddress = https://localhost:7066
-@MyToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJIb3NzYW0iLCJlbWFpbCI6Imhvc3NhbUBlbmdpbmVlci5jb20iLCJyb2xlIjoiRW5naW5lZXIiLCJuYmYiOjE3NzM3ODUzOTUsImV4cCI6MTc3NDM5MDE5NSwiaWF0IjoxNzczNzg1Mzk1LCJpc3MiOiJBcnRpZmFjdHNBUEkiLCJhdWQiOiJGbHV0dGVyQXBwVXNlcnMifQ.9PeCPqaTxF1LeJccnp4QNUUtNucHzlQ1RclY5McipLo
+// Note: If this token expires, run the `POST /api/Auth/login` endpoint below to generate a new one, then replace this token.
+@MyToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJIb3NzYW0iLCJlbWFpbCI6Imhvc3NhbUBlbmdpbmVlci5jb20iLCJyb2xlIjoiRW5naW5lZXIiLCJuYmYiOjE3NzczMDc2MTIsImV4cCI6MTc3NzkxMjQxMiwiaWF0IjoxNzc3MzA3NjEyLCJpc3MiOiJBcnRpZmFjdHNBUEkiLCJhdWQiOiJGbHV0dGVyQXBwVXNlcnMifQ.SXUmc_0HUyt4FcgqwQUif_ebIWS5caVH-OuS2MGqr4Q 
 
 ### 
 POST {{ArtifactsAPI_HostAddress}}/api/Artifacts
@@ -50,7 +51,7 @@ Content-Type: application/json
 Authorization: Bearer {{MyToken}}
 
 {
-  "title": "The Great Sphinx Scan",
+  "title": "The  Sphinx Scan",
   "description": "A detailed 3D scan of the Sphinx",
   "coverPhoto": "https://url.com/cover.jpg",
   "model3D": "https://url.com/model.glb",

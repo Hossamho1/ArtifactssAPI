@@ -18,6 +18,23 @@ public class ApplicationDbContext : DbContext
     public DbSet<Post> Posts { get; set; }
     public DbSet<Coordinate> Coordinates { get; set; }
 
-    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
+        // Configure Post -> Coordinate relationship with cascade delete
+        modelBuilder.Entity<Post>()
+            .HasMany(p => p.Coordinates)
+            .WithOne(c => c.Post)
+            .HasForeignKey(c => c.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure Post -> User relationship
+        modelBuilder.Entity<Post>()
+            .HasOne(p => p.User)
+            .WithMany()
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }
+
