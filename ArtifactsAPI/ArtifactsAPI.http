@@ -1,5 +1,5 @@
 
-@ArtifactsAPI_HostAddress = https://localhost:7066
+@ArtifactsAPI_HostAddress = http://artifactssapi.runasp.net
 // Note: If this token expires, run the `POST /api/Auth/login` endpoint below to generate a new one, then replace this token.
 @MyToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJIb3NzYW0iLCJlbWFpbCI6Imhvc3NhbUBlbmdpbmVlci5jb20iLCJyb2xlIjoiRW5naW5lZXIiLCJuYmYiOjE3NzczMDc2MTIsImV4cCI6MTc3NzkxMjQxMiwiaWF0IjoxNzc3MzA3NjEyLCJpc3MiOiJBcnRpZmFjdHNBUEkiLCJhdWQiOiJGbHV0dGVyQXBwVXNlcnMifQ.SXUmc_0HUyt4FcgqwQUif_ebIWS5caVH-OuS2MGqr4Q 
 
