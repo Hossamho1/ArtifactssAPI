@@ -15,7 +15,7 @@ namespace ArtifactsAPI.Models
 
         [Required]
         [MaxLength(50)]
-        public string Role { get; set; } = string.Empty; // Tourist or Engineer
+        public string Role { get; set; } = string.Empty; // Tourist or Engineer Admin 
 
         [Required]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
@@ -26,6 +26,8 @@ namespace ArtifactsAPI.Models
         [Required]
         [EmailAddress]
         [MaxLength(150)]
-        public string Email { get; set; } 
+        public string Email { get; set; }
+
+        public bool CanCreatePosts { get; set; } = false;
     }
 }
