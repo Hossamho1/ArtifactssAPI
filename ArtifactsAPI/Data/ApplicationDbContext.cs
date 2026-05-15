@@ -17,6 +17,11 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Post> Posts { get; set; }
     public DbSet<Coordinate> Coordinates { get; set; }
+    public DbSet<PostLike> PostLikes { get; set; }
+    public DbSet<Bookmark> Bookmarks { get; set; }
+    public DbSet<Follow> Follows { get; set; }
+    public DbSet<PostView> PostViews { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,6 +40,29 @@ public class ApplicationDbContext : DbContext
             .WithMany()
             .HasForeignKey(p => p.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<PostLike>().HasKey(pl => new { pl.UserId, pl.PostId });
+        modelBuilder.Entity<Bookmark>().HasKey(b => new { b.UserId, b.PostId });
+
+        modelBuilder.Entity<Follow>().HasKey(f => new { f.FollowerId, f.FollowingId });
+
+        modelBuilder.Entity<Follow>()
+            .HasOne(f => f.Follower)
+            .WithMany()
+            .HasForeignKey(f => f.FollowerId)
+            .OnDelete(DeleteBehavior.Restrict);  
+
+        modelBuilder.Entity<Follow>()
+            .HasOne(f => f.Following)
+            .WithMany()
+            .HasForeignKey(f => f.FollowingId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        //  Configure PostView relations 
+        modelBuilder.Entity<PostView>().HasKey(pv => new { pv.PostId, pv.UserId });
+
+
     }
 }
 

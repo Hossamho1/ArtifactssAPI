@@ -29,5 +29,7 @@ namespace ArtifactsAPI.Models
         public string Email { get; set; }
 
         public bool CanCreatePosts { get; set; } = false;
+
+        public string? ProfilePicture { get; set; }
     }
 }
