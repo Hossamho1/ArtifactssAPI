@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using Scalar.AspNetCore; // Ensure this package is installed via NuGet
+using Microsoft.AspNetCore.StaticFiles;
+
 
 namespace ArtifactsAPI
 {
@@ -66,6 +68,7 @@ namespace ArtifactsAPI
 
             var app = builder.Build();
 
+            app.UseDeveloperExceptionPage();
             // --- API Documentation Setup ---
             // Moving these outside 'IsDevelopment' so they work on Railway (Production)
             app.MapOpenApi();
@@ -73,6 +76,18 @@ namespace ArtifactsAPI
 
             // Middleware Pipeline
             app.UseHttpsRedirection();
+
+            var provider = new FileExtensionContentTypeProvider();
+
+            // تعريف صيغ الـ 3D للسيرفر
+            provider.Mappings[".glb"] = "model/gltf-binary";
+            provider.Mappings[".gltf"] = "model/gltf+json";
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = provider
+            });
+
             app.UseCors("AllowAll");
 
             // Authentication must come before Authorization
@@ -83,6 +98,7 @@ namespace ArtifactsAPI
 
             // Health Check / Welcome Route
             app.MapGet("/", () => "The Artifacts API is LIVE! Access documentation at: /scalar/v1");
+            app.UseDeveloperExceptionPage();
 
             app.Run();
         }
