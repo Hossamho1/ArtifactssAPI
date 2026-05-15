@@ -3,6 +3,7 @@ using System;
 using ArtifactsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ArtifactsAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260509093251_PostLikesBookmarks")]
+    partial class PostLikesBookmarks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,21 +131,6 @@ namespace ArtifactsAPI.Migrations
                     b.ToTable("Coordinates");
                 });
 
-            modelBuilder.Entity("ArtifactsAPI.Models.Follow", b =>
-                {
-                    b.Property<int>("FollowerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FollowingId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("FollowerId", "FollowingId");
-
-                    b.HasIndex("FollowingId");
-
-                    b.ToTable("Follows");
-                });
-
             modelBuilder.Entity("ArtifactsAPI.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -193,24 +181,6 @@ namespace ArtifactsAPI.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("PostLikes");
-                });
-
-            modelBuilder.Entity("ArtifactsAPI.Models.PostView", b =>
-                {
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("ViewedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("PostId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PostViews");
                 });
 
             modelBuilder.Entity("ArtifactsAPI.Models.ScanRecord", b =>
@@ -322,25 +292,6 @@ namespace ArtifactsAPI.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("ArtifactsAPI.Models.Follow", b =>
-                {
-                    b.HasOne("ArtifactsAPI.Models.User", "Follower")
-                        .WithMany()
-                        .HasForeignKey("FollowerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ArtifactsAPI.Models.User", "Following")
-                        .WithMany()
-                        .HasForeignKey("FollowingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Follower");
-
-                    b.Navigation("Following");
-                });
-
             modelBuilder.Entity("ArtifactsAPI.Models.Post", b =>
                 {
                     b.HasOne("ArtifactsAPI.Models.User", "User")
@@ -353,25 +304,6 @@ namespace ArtifactsAPI.Migrations
                 });
 
             modelBuilder.Entity("ArtifactsAPI.Models.PostLike", b =>
-                {
-                    b.HasOne("ArtifactsAPI.Models.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ArtifactsAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ArtifactsAPI.Models.PostView", b =>
                 {
                     b.HasOne("ArtifactsAPI.Models.Post", "Post")
                         .WithMany()

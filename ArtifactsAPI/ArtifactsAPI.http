@@ -1,12 +1,13 @@
 
 @ArtifactsAPI_HostAddress = http://artifactssapi.runasp.net
 // Note: If this token expires, run the `POST /api/Auth/login` endpoint below to generate a new one, then replace this token.
-@MyToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJIb3NzYW0iLCJlbWFpbCI6Imhvc3NhbUBlbmdpbmVlci5jb20iLCJyb2xlIjoiRW5naW5lZXIiLCJuYmYiOjE3NzczMDc2MTIsImV4cCI6MTc3NzkxMjQxMiwiaWF0IjoxNzc3MzA3NjEyLCJpc3MiOiJBcnRpZmFjdHNBUEkiLCJhdWQiOiJGbHV0dGVyQXBwVXNlcnMifQ.SXUmc_0HUyt4FcgqwQUif_ebIWS5caVH-OuS2MGqr4Q 
+@EngineerToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxNCIsInVuaXF1ZV9uYW1lIjoiaGJrIiwiZW1haWwiOiJoYUBnbWFpbC5jb20iLCJyb2xlIjoiRW5naW5lZXIiLCJuYmYiOjE3NzgxNzEwMzQsImV4cCI6MTc3ODc3NTgzNCwiaWF0IjoxNzc4MTcxMDM0LCJpc3MiOiJBcnRpZmFjdHNBUEkiLCJhdWQiOiJGbHV0dGVyQXBwVXNlcnMifQ.wz2CBgqREM4RpBFmPoBmYWskVquUGLuiNw9B0iITN5I
+@AdminToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMyIsInVuaXF1ZV9uYW1lIjoiVGhlIG93bmVyIiwiZW1haWwiOiJoZGFAaGRhLmNvbSIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc3ODAxOTc3MSwiZXhwIjoxNzc4NjI0NTcxLCJpYXQiOjE3NzgwMTk3NzEsImlzcyI6IkFydGlmYWN0c0FQSSIsImF1ZCI6IkZsdXR0ZXJBcHBVc2VycyJ9.gfKeZ0BtgL5uvCbYaLwb5vlRg9cRBv3MSSEj4f86erE
 
 ### 
 POST {{ArtifactsAPI_HostAddress}}/api/Artifacts
 Content-Type: application/json
-Authorization: Bearer {{MyToken}}
+Authorization: Bearer {{EngineerToken}}
 
 {
   "name": "King Hossam Mask",
@@ -19,10 +20,10 @@ POST {{ArtifactsAPI_HostAddress}}/api/Auth/register
 Content-Type: application/json
 
 {
-  "name": "Hossam",
-  "email": "hossam@engineer.com",
+  "name": "hbk",
+  "email": "ha@gmail.com",
   "role": "Engineer",
-  "passwordHash": "Password123" 
+  "passwordHash": "1!1zAmAlEK" 
 }
 
 ### 3. 
@@ -30,15 +31,15 @@ POST {{ArtifactsAPI_HostAddress}}/api/Auth/login
 Content-Type: application/json
 
 {
-  "email": "hossam@engineer.com",
-  "passwordHash": "Password123" 
+  "email": "ha@gmail.com",
+  "passwordHash": "1!1zAmAlEK" 
 }
 
 
 
 ### 5. 
 GET {{ArtifactsAPI_HostAddress}}/api/Artifacts
-Authorization: Bearer {{MyToken}}
+Authorization: Bearer {{EngineerToken}}
 Accept: application/json
 
 
@@ -46,12 +47,12 @@ Accept: application/json
 
 
 ### Create a New Post (With Coordinates)
-POST {{ArtifactsAPI_HostAddress}}/api/Posts
+POST {{ArtifactsAPI_HostAddress}}/api/Posts/create
 Content-Type: application/json
-Authorization: Bearer {{MyToken}}
+Authorization: Bearer {{EngineerToken}}
 
 {
-  "title": "The  Sphinx Scan",
+  "title": " Scan",
   "description": "A detailed 3D scan of the Sphinx",
   "coverPhoto": "https://url.com/cover.jpg",
   "model3D": "https://url.com/model.glb",
@@ -74,3 +75,73 @@ Authorization: Bearer {{MyToken}}
 ### Get All Posts
 GET {{ArtifactsAPI_HostAddress}}/api/Posts
 Accept: application/json
+
+
+### 1. Follow / Unfollow User (Put the target User ID in URL)
+POST {{ArtifactsAPI_HostAddress}}/api/Auth/users/5/follow
+Authorization: Bearer {{EngineerToken}}
+
+### 2. Get User Profile with Followers & Following count
+GET {{ArtifactsAPI_HostAddress}}/api/Auth/users/5/profile
+Authorization: Bearer {{EngineerToken}}
+
+### 3. Record a View for a Post
+POST {{ArtifactsAPI_HostAddress}}/api/Posts/1/view
+Authorization: Bearer {{EngineerToken}}
+
+### 4. Get Post Details (Now includes ViewsCount and LikesCount)
+GET {{ArtifactsAPI_HostAddress}}/api/Posts/1
+Authorization: Bearer {{EngineerToken}}
+
+###
+
+PUT {{ArtifactsAPI_HostAddress}}/api/Auth/select-engineer/1
+Authorization: Bearer {{AdminToken}}
+###
+PUT {{ArtifactsAPI_HostAddress}}/api/Auth/select-engineer/by-email?email=hossam@engineer.com
+Authorization: Bearer {{AdminToken}}
+
+### ==========================================
+### 1. Posts Endpoints (Edit & Delete)
+### ==========================================
+
+### Edit Post (Owner Only)
+PUT {{ArtifactsAPI_HostAddress}}/api/Posts/edit/1
+Authorization: Bearer {{EngineerToken}}
+Content-Type: application/json
+
+{
+  "title": "Updated 3D Artifact",
+  "description": "This description was updated successfully via the new Edit endpoint."
+}
+
+### Delete Post (Owner OR Admin)
+DELETE {{ArtifactsAPI_HostAddress}}/api/Posts/delete/1
+Authorization: Bearer {{AdminToken}} 
+# تقدر تبدل الـ AdminToken بـ EngineerToken وتجرب تمسح بوست مش بتاعك عشان تتأكد إنه هيرفض
+
+
+### ==========================================
+### 2. Likes & Bookmarks Endpoints
+### ==========================================
+
+### Toggle Like (Add / Remove Like)
+POST {{ArtifactsAPI_HostAddress}}/api/Posts/8/like
+Authorization: Bearer {{EngineerToken}}
+
+### Toggle Bookmark (Add / Remove Bookmark)
+POST {{ArtifactsAPI_HostAddress}}/api/Posts/6/bookmark
+Authorization: Bearer {{EngineerToken}}
+
+
+### ==========================================
+### 3. Admin Control Endpoints (By Email)
+### ==========================================
+
+### Revoke Engineer Permission (Admin Only)
+PUT {{ArtifactsAPI_HostAddress}}/api/Auth/revoke-engineer/by-email?email=hossam@engineer.com
+Authorization: Bearer {{AdminToken}}
+
+### Delete User Entirely (Admin Only)
+DELETE {{ArtifactsAPI_HostAddress}}/api/Auth/delete-user/by-email?email=test@example.com
+Authorization: Bearer {{AdminToken}}
