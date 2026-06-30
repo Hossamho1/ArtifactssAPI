@@ -1,106 +1,141 @@
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
+using ArtifactsAPI.Application.Interfaces;
+using ArtifactsAPI.Application.Services;
+using ArtifactsAPI.Application.Validators;
+using ArtifactsAPI.Infrastructure.Persistence;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Security.Claims;
-using Scalar.AspNetCore; // Ensure this package is installed via NuGet
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Npgsql;
+using Scalar.AspNetCore; // Ensure this package is installed via NuGet
+using System.Net.NetworkInformation;
+using System.Security.Claims;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Features;
 
+namespace ArtifactsAPI;
 
-namespace ArtifactsAPI
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.Configure<FormOptions>(options =>
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container
-            builder.Services.AddControllers();
-
-            // --- Database Configuration (Supabase/PostgreSQL) ---
-            // Using NpgsqlDataSource to handle transaction pooling (Port 6543)
-            // MaxAutoPrepare is set to 0 to prevent issues with PgBouncer
-            var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connStr);
-            dataSourceBuilder.ConnectionStringBuilder.MaxAutoPrepare = 0;
-            var dataSource = dataSourceBuilder.Build();
-
-            builder.Services.AddDbContext<ArtifactsAPI.Data.ApplicationDbContext>(options =>
-                options.UseNpgsql(dataSource));
-
-            // --- JWT Authentication Setup ---
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-
-                ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                ValidAudience = builder.Configuration["Jwt:Audience"],
-
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-                ),
-
-                // Use the standard claim type constants so claims added when creating
-                // the token (ClaimTypes.NameIdentifier / ClaimTypes.Role) are mapped
-                // correctly into the authenticated principal.
-                RoleClaimType = ClaimTypes.Role,
-                NameClaimType = ClaimTypes.NameIdentifier
-            };
+            options.ValueLengthLimit = int.MaxValue;
+            options.MultipartBodyLengthLimit = long.MaxValue;
+            options.MemoryBufferThreshold = int.MaxValue;
         });
 
-            // Add OpenAPI/Scalar support
-            builder.Services.AddOpenApi();
+        builder.WebHost.ConfigureKestrel(serverOptions =>
+        {
+            serverOptions.Limits.MaxRequestBodySize = long.MaxValue;
+        });
+        // Add services to the container
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
 
-            // Configure CORS to allow Flutter & AI team connections
-            builder.Services.AddCors(options => {
-                options.AddPolicy("AllowAll", b => b.AllowAnyMethod()
-                                                   .AllowAnyHeader()
-                                                   .AllowAnyOrigin());
-            });
+        // --- Database Configuration (Supabase/PostgreSQL) ---
+        // Using NpgsqlDataSource to handle transaction pooling (Port 6543)
+        // MaxAutoPrepare is set to 0 to prevent issues with PgBouncer
+        var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connStr);
+        dataSourceBuilder.ConnectionStringBuilder.MaxAutoPrepare = 0;
+        var dataSource = dataSourceBuilder.Build();
 
-            var app = builder.Build();
 
-            app.UseDeveloperExceptionPage();
-            // --- API Documentation Setup ---
-            // Moving these outside 'IsDevelopment' so they work on Railway (Production)
-            app.MapOpenApi();
-            app.MapScalarApiReference();
+        builder.Services.AddScoped<IArtifactService, ArtifactService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IPostService, PostService>();
+        builder.Services.AddScoped<IAIReportService, AIReportService>();
+        builder.Services.AddScoped<IScanRecordService, ScanRecordService>();
 
-            // Middleware Pipeline
-            app.UseHttpsRedirection();
 
-            var provider = new FileExtensionContentTypeProvider();
+        builder.Services.AddHttpClient();
+        //builder.Services.AddScoped<IAIReportService, AIReportService>();
+        builder.Services.AddScoped<IScanRecordService, ScanRecordService>();
 
-            // تعريف صيغ الـ 3D للسيرفر
-            provider.Mappings[".glb"] = "model/gltf-binary";
-            provider.Mappings[".gltf"] = "model/gltf+json";
+        builder.Services.AddValidatorsFromAssemblyContaining<CreatePostDtoValidator>();
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ContentTypeProvider = provider
-            });
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(dataSource));
 
-            app.UseCors("AllowAll");
+        // --- JWT Authentication Setup ---
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
 
-            // Authentication must come before Authorization
-            app.UseAuthentication();
-            app.UseAuthorization();
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
 
-            app.MapControllers();
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            ),
 
-            // Health Check / Welcome Route
-            app.MapGet("/", () => "The Artifacts API is LIVE! Access documentation at: /scalar/v1");
-            app.UseDeveloperExceptionPage();
+            // Use the standard claim type constants so claims added when creating
+            // the token (ClaimTypes.NameIdentifier / ClaimTypes.Role) are mapped
+            // correctly into the authenticated principal.
+            RoleClaimType = ClaimTypes.Role,
+            NameClaimType = ClaimTypes.NameIdentifier
+        };
+    });
 
-            app.Run();
-        }
+        // Add OpenAPI/Scalar support
+        builder.Services.AddOpenApi();
+
+        // Configure CORS to allow Flutter & AI team connections
+        builder.Services.AddCors(options => {
+            options.AddPolicy("AllowAll", b => b.AllowAnyMethod()
+                                               .AllowAnyHeader()
+                                               .AllowAnyOrigin());
+        });
+
+        var app = builder.Build();
+
+        app.UseMiddleware<ArtifactsAPI.Middlewares.Middleware>();
+        app.UseDeveloperExceptionPage();
+        // --- API Documentation Setup ---
+        // Moving these outside 'IsDevelopment' so they work on Railway (Production)
+        app.MapOpenApi();
+        app.MapScalarApiReference();
+
+        // Middleware Pipeline
+        app.UseHttpsRedirection();
+
+        var provider = new FileExtensionContentTypeProvider();
+
+        provider.Mappings[".glb"] = "model/gltf-binary";
+        provider.Mappings[".gltf"] = "model/gltf+json";
+
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            ContentTypeProvider = provider
+        });
+
+        app.UseCors("AllowAll");
+
+        // Authentication must come before Authorization
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        // Health Check / Welcome Route
+        app.MapGet("/", () => "The Artifacts API is LIVE! Access documentation at: /scalar/v1");
+        app.UseDeveloperExceptionPage();
+
+        app.Run();
     }
 }

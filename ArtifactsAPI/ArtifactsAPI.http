@@ -1,7 +1,8 @@
 
 @ArtifactsAPI_HostAddress = http://artifactssapi.runasp.net
 // Note: If this token expires, run the `POST /api/Auth/login` endpoint below to generate a new one, then replace this token.
-@EngineerToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxNCIsInVuaXF1ZV9uYW1lIjoiaGJrIiwiZW1haWwiOiJoYUBnbWFpbC5jb20iLCJyb2xlIjoiRW5naW5lZXIiLCJuYmYiOjE3NzgxNzEwMzQsImV4cCI6MTc3ODc3NTgzNCwiaWF0IjoxNzc4MTcxMDM0LCJpc3MiOiJBcnRpZmFjdHNBUEkiLCJhdWQiOiJGbHV0dGVyQXBwVXNlcnMifQ.wz2CBgqREM4RpBFmPoBmYWskVquUGLuiNw9B0iITN5I
+@EngineerToken eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxNCIsInVuaXF1ZV9uYW1lIjoiaGJrIiwiZW1haWwiOiJoYUBnbWFpbC5jb20iLCJyb2xlIjoiRW5naW5lZXIiLCJuYmYiOjE3ODI2MDc3MjgsImV4cCI6MTc4MzIxMjUyOCwiaWF0IjoxNzgyNjA3NzI4LCJpc3MiOiJBcnRpZmFjdHNBUEkiLCJhdWQiOiJGbHV0dGVyQXBwVXNlcnMifQ.MuWCKR_NzcwFvpuPT-I0gfwG7cvRrkFq6IsdItb9P9c
+
 @AdminToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxMyIsInVuaXF1ZV9uYW1lIjoiVGhlIG93bmVyIiwiZW1haWwiOiJoZGFAaGRhLmNvbSIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc3ODAxOTc3MSwiZXhwIjoxNzc4NjI0NTcxLCJpYXQiOjE3NzgwMTk3NzEsImlzcyI6IkFydGlmYWN0c0FQSSIsImF1ZCI6IkZsdXR0ZXJBcHBVc2VycyJ9.gfKeZ0BtgL5uvCbYaLwb5vlRg9cRBv3MSSEj4f86erE
 
 ### 
@@ -145,3 +146,4 @@ Authorization: Bearer {{AdminToken}}
 ### Delete User Entirely (Admin Only)
 DELETE {{ArtifactsAPI_HostAddress}}/api/Auth/delete-user/by-email?email=test@example.com
 Authorization: Bearer {{AdminToken}}
+
