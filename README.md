@@ -2,11 +2,11 @@
 
 A professional-grade **Artifacts Management System** built with ASP.NET Core, featuring clean architecture, microservice integration, and intelligent background processing for cultural heritage documentation and AI-powered damage analysis.
 
-## 🎯 Overview
+##  Overview
 
 ArtifactsAPI is a stateless REST API that enables engineers and researchers to document, analyze, and manage archaeological and cultural artifacts. The system leverages external Python FastAPI microservices for real-time YOLO-based damage detection and COLMAP-based 3D photogrammetry, delivering responses in approximately **120ms** through intelligent asynchronous background job processing.
 
-## 🏗️ Architecture
+## Architecture
 
 ### Layered Clean Architecture
 ```
@@ -23,7 +23,7 @@ ArtifactsAPI (Monolithic)
 - **COLMAP 3D Reconstruction**: Batch photogrammetry processing from multi-angle image sets
 - **Asynchronous Job Processing**: Background tasks ensure fast API responses while offloading intensive work
 
-## ✨ Key Features
+##  Key Features
 
 - **Role-Based Access Control (RBAC)**
   - Engineer: Full access to artifact creation, modification, and analysis
@@ -55,7 +55,7 @@ ArtifactsAPI (Monolithic)
   - Unique filename generation
   - Secure storage in designated folders
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Backend
 - **Framework**: ASP.NET Core 10
@@ -83,7 +83,7 @@ ArtifactsAPI (Monolithic)
 - Client response: 100-120ms total
 - Background processing continues asynchronously
 
-## 🚀 Setup Instructions
+##  Setup Instructions
 
 ### Prerequisites
 - .NET 10 SDK
@@ -165,7 +165,7 @@ Background Job (Async)
 	  └─> Client polls /api/posts/{id} for results
 ```
 
-## 🔐 Authentication
+## Authentication
 
 ### Login
 ```bash
@@ -191,7 +191,7 @@ curl -X GET https://localhost:5001/api/artifacts \
   -H "Authorization: Bearer {token}"
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ArtifactsAPI/
@@ -219,7 +219,7 @@ ArtifactsAPI/
 └── appsettings.*.json
 ```
 
-## 🤝 Contributing
+##Contributing
 
 For internal development, follow semantic versioning and commit messages:
 ```
@@ -230,18 +230,18 @@ refactor: Code restructuring
 test: Test updates
 ```
 
-## 📄 License
+##  License
 
 This project is proprietary. Unauthorized copying or distribution is prohibited.
 
 ---
 
-## 👨‍💻 Developer
+##  Developer
 
 **Hossam Mostafa**  
 *Software Development*
 
-Senior .NET Backend Engineer specializing in Clean Architecture, microservice integration, and real-time data processing systems.
+ .NET Backend Engineer specializing in Clean Architecture, microservice integration, and real-time data processing systems.
 
 ---
 
