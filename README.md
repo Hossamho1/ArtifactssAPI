@@ -239,7 +239,7 @@ This project is proprietary. Unauthorized copying or distribution is prohibited.
 ## 👨‍💻 Developer
 
 **Hossam Mostafa**  
-*Information Technology - Software Development*
+*Software Development*
 
 Senior .NET Backend Engineer specializing in Clean Architecture, microservice integration, and real-time data processing systems.
 
